@@ -5,10 +5,10 @@ window.GYM = {
   fullName: "Krunch Fitness Studio",
   area: "Saidabad",
   address: "Saroornagar, Vinay Nagar, Saidabad, Hyderabad, Telangana 500059",
-  phoneDisplay: "072869 79797",
-  phone: "+917286979797",
+  phoneDisplay: "098765 43210",
+  phone: "+919876543210",
   // WhatsApp links only open a pre-filled chat; nothing is sent until someone taps Send.
-  whatsapp: "917286979797",
+  whatsapp: "919876543210",
   hours: "Open daily · till 10 PM", // CONFIRM opening time
   lat: 17.3548738,
   lng: 78.5113128,
