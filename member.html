@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Krunch Member App</title>
+  <meta name="theme-color" content="#060606">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    main { max-width: 640px; margin: 0 auto; padding: 20px 16px 80px; display: grid; gap: 14px; }
+    h1 { font-size: clamp(40px, 11vw, 56px); line-height: .95; letter-spacing: -0.05em; font-weight: 500; margin: 14px 0 6px; }
+    h2 { font-size: 26px; letter-spacing: -0.04em; font-weight: 500; margin: 0 0 4px; }
+    .sub { color: var(--muted); margin: 0; }
+
+    /* Check-in */
+    .checkin-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 18px; }
+    .hint { margin: 10px 0 0; font-size: 13px; color: var(--faint); }
+    .hint button { background: none; border: 0; padding: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 13px; }
+
+    .welcome { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
+    .ring { width: 96px; height: 96px; position: relative; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+    .ring .bg { stroke: rgba(255,255,255,.08); }
+    .ring .fg { stroke: var(--ok); transition: stroke-dashoffset 1.4s var(--ease); }
+    .ring .lbl { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; line-height: 1; }
+    .ring .lbl b { font-size: 28px; letter-spacing: -0.04em; font-weight: 500; display: block; }
+    .ring .lbl span { font-size: 11px; color: var(--muted); }
+    .nudge { margin-top: 16px; padding: 16px; border-radius: 16px; background: var(--warn-soft); border: 1px solid rgba(255,181,71,.25); }
+    .nudge b { color: var(--warn); font-weight: 600; }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+    .stat { padding: 14px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line); }
+    .stat b { display: block; font-size: 22px; letter-spacing: -0.03em; font-weight: 500; }
+    .stat span { font-size: 12px; color: var(--muted); }
+
+    /* Plans */
+    .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid var(--line); margin: 16px 0; }
+    .seg button { border: 0; background: none; padding: 10px 6px; border-radius: 999px; font-size: 14px; color: var(--muted); cursor: pointer; transition: background .3s, color .3s; }
+    .seg button.on { background: var(--text); color: #0a0a0a; }
+    .day { border-top: 1px solid var(--line); }
+    .day summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 16px 2px; cursor: pointer; }
+    .day summary::-webkit-details-marker { display: none; }
+    .day summary b { font-weight: 500; font-size: 17px; letter-spacing: -0.02em; }
+    .day summary .chev { transition: transform .4s var(--ease); color: var(--muted); }
+    .day[open] summary .chev { transform: rotate(180deg); }
+    .ex { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.03); margin-bottom: 6px; }
+    .ex b { font-weight: 500; }
+    .ex .sets { font-variant-numeric: tabular-nums; color: var(--text); font-size: 14px; text-align: right; }
+    .ex .cue { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+    .day .list { padding-bottom: 14px; }
+    .note { font-size: 13px; color: var(--muted); padding: 12px 14px; border-radius: 14px; border: 1px dashed var(--line-2); margin-top: 12px; }
+
+    .done { text-align: center; padding: 10px 0; }
+    .done .tick { width: 60px; height: 60px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; margin: 0 auto 14px; }
+    .done .tick svg { width: 28px; height: 28px; }
+    select.input { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+  </style>
+</head>
+<body>
+  <div class="ambient"></div>
+  <header class="appbar">
+    <a href="index.html" class="brand"><span class="brand-logo">K</span><span class="brand-name">Krunch <small>Members</small></span></a>
+    <span class="demo-flag">Demo</span>
+  </header>
+
+  <main>
+    <section class="reveal">
+      <span class="kicker"><span class="dot"></span> At the front desk</span>
+      <h1>Check <span class="serif">in.</span></h1>
+      <p class="sub">Scan the desk QR code and enter your number. It takes two seconds.</p>
+    </section>
+
+    <!-- Check-in -->
+    <section class="card reveal" id="checkin-card">
+      <form id="checkin-form" novalidate>
+        <label for="ci-phone" class="small muted">Your mobile number</label>
+        <div class="checkin-row">
+          <input class="input" id="ci-phone" inputmode="tel" placeholder="10-digit number" autocomplete="tel">
+          <button class="btn btn-light" type="submit">Check in</button>
+        </div>
+        <p class="hint">Demo: try <button type="button" data-try="9876500011">98765 00011</button> (plan ending soon) or <button type="button" data-try="9876500022">98765 00022</button></p>
+      </form>
+      <div id="welcome" class="hidden"></div>
+    </section>
+
+    <!-- Workout plans -->
+    <section class="card reveal" id="plans">
+      <h2>Your starter <span class="serif">plan</span></h2>
+      <p class="sub small">Made by our coaches for members without personal training. Ask any coach on the floor to check your form.</p>
+      <div class="seg" id="seg">
+        <button data-goal="beginner" class="on">Beginner</button>
+        <button data-goal="fatloss">Fat loss</button>
+        <button data-goal="muscle">Muscle gain</button>
+      </div>
+      <div id="plan-days"></div>
+      <div class="note" id="plan-note"></div>
+    </section>
+
+    <!-- PT consultation -->
+    <section class="card reveal" id="pt">
+      <h2>Free PT <span class="serif">consultation</span></h2>
+      <p class="sub small" style="margin-bottom:18px">20 minutes with a coach: body check, goal review and a plan. No obligation.</p>
+      <form id="pt-form" novalidate>
+        <div class="field"><label for="pt-name">Name</label><input class="input" id="pt-name" placeholder="Your name"></div>
+        <div class="field"><label for="pt-phone">Mobile</label><input class="input" id="pt-phone" inputmode="tel" placeholder="10-digit number"></div>
+        <div class="field"><label for="pt-coach">Preferred coach</label><select class="input" id="pt-coach"></select></div>
+        <div class="field"><label>Goal</label>
+          <div class="choice-row" data-choice id="pt-goal"><span class="choice on">Fat loss</span><span class="choice">Muscle gain</span><span class="choice">Strength</span><span class="choice">Health issue</span></div>
+        </div>
+        <button class="btn btn-light btn-block" type="submit">Request consultation</button>
+      </form>
+      <div class="done hidden" id="pt-done">
+        <div class="tick" data-icon="check"></div>
+        <h2>Request sent</h2>
+        <p class="sub small">Your coach will reach out today to fix a time.</p>
+      </div>
+    </section>
+
+    <!-- Report issue -->
+    <section class="card reveal" id="issue">
+      <h2>Something <span class="serif">broken?</span></h2>
+      <p class="sub small" style="margin-bottom:18px">Machine not working, washroom needs attention, anything else. This goes straight to the owner.</p>
+      <form id="issue-form" novalidate>
+        <div class="field"><label>What's it about?</label>
+          <div class="choice-row" data-choice id="is-tag"><span class="choice on">Equipment</span><span class="choice">Cleanliness</span><span class="choice">Washroom</span><span class="choice">Staff</span><span class="choice">Other</span></div>
+        </div>
+        <div class="field"><label for="is-msg">Details</label><textarea class="input" id="is-msg" placeholder="e.g. Treadmill 3 belt is slipping"></textarea></div>
+        <button class="btn btn-block" type="submit">Send to owner</button>
+      </form>
+      <div class="done hidden" id="is-done">
+        <div class="tick" data-icon="check"></div>
+        <h2>Thanks, noted</h2>
+        <p class="sub small">The owner has it. We'll fix it as fast as we can.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/store.js"></script>
+  <script src="assets/ui.js"></script>
+  <script>
+    const { $, $$, esc, rupees, dateShort, waLink, toast, reveal, choices, chosen, icon } = UI;
+    $$("[data-icon]").forEach((el) => (el.innerHTML = icon[el.dataset.icon]));
+
+    // ---------- Check-in ----------
+    let current = null;
+    $$("[data-try]").forEach((b) => b.addEventListener("click", () => { $("#ci-phone").value = b.dataset.try; $("#checkin-form").requestSubmit(); }));
+
+    $("#checkin-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const m = Store.findMemberByPhone($("#ci-phone").value);
+      if (!m) { toast("Number not found. Ask the front desk to add you."); return; }
+      const gap = Store.daysSince(m.lastVisit);
+      Store.checkIn(m);
+      current = m;
+      renderWelcome(m, gap);
+    });
+
+    function renderWelcome(m, gap) {
+      const plan = Store.planById(m.plan);
+      const total = plan.months * 30;
+      const left = Store.daysUntil(m.end);
+      const pct = Math.max(0, Math.min(1, left / total));
+      const C = 2 * Math.PI * 42;
+      const first = m.name.split(" ")[0];
+      const ringColor = left <= 0 ? "var(--accent)" : left <= 7 ? "var(--warn)" : "var(--ok)";
+      let nudge = "";
+      if (left <= 7) {
+        const msg = `Hi, this is ${m.name} (${m.phone}). I'd like to renew my ${plan.name} plan.`;
+        nudge = `<div class="nudge">
+          <b>${left <= 0 ? "Your plan has ended." : `Your plan ends in ${left} day${left === 1 ? "" : "s"}.`}</b>
+          <p class="small" style="margin:4px 0 12px;color:rgba(255,255,255,.75)">Renew now to keep your streak going. ${plan.name}: ${rupees(plan.price)}</p>
+          <a class="btn btn-light btn-sm" target="_blank" rel="noopener" href="${waLink(GYM.whatsapp, msg)}">${icon.wa} Renew on WhatsApp</a>
+        </div>`;
+      }
+      $("#welcome").innerHTML = `
+        <div class="welcome">
+          <div class="ring">
+            <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" cx="50" cy="50" r="42" stroke-dasharray="${C}" stroke-dashoffset="${C}" style="stroke:${ringColor}"/></svg>
+            <div class="lbl"><div><b>${Math.max(0, left)}</b><span>days left</span></div></div>
+          </div>
+          <div>
+            <span class="tag tag-green">${icon.check.replace("<svg", '<svg style="width:12px;height:12px;vertical-align:-2px"')} Checked in</span>
+            <h2 style="margin-top:8px">Welcome back, <span class="serif">${esc(first)}.</span></h2>
+            <p class="sub small">${gap >= 7 ? `Good to see you after ${gap} days. Let's ease back in.` : "Have a strong session today."}</p>
+          </div>
+        </div>
+        ${nudge}
+        <div class="stat-row">
+          <div class="stat"><b>${esc(plan.name)}</b><span>Plan</span></div>
+          <div class="stat"><b>${dateShort(m.end)}</b><span>Valid till</span></div>
+          <div class="stat"><b>${m.trainer ? esc(m.trainer.split(" ")[0]) : "Floor"}</b><span>Coach</span></div>
+        </div>
+        <button class="btn btn-sm" style="margin-top:14px" id="ci-again">Not you? Check in again</button>`;
+      $("#checkin-form").classList.add("hidden");
+      $("#welcome").classList.remove("hidden");
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        $("#welcome .fg").style.strokeDashoffset = C * (1 - pct);
+      }));
+      $("#ci-again").onclick = () => { $("#welcome").classList.add("hidden"); $("#checkin-form").classList.remove("hidden"); $("#ci-phone").value = ""; };
+      $("#pt-name").value = m.name; $("#pt-phone").value = m.phone;
+    }
+
+    // ---------- Workout plans ----------
+    const PLANS = {
+      beginner: {
+        note: "3 days a week, e.g. Mon / Wed / Fri. Start light enough to finish every set with good form, then add weight when all reps feel easy.",
+        days: [
+          { name: "Day A · Full body", ex: [
+            ["Goblet squat", "3 × 10", "Sit between your heels, chest up, knees track over toes."],
+            ["Machine chest press", "3 × 10", "Shoulder blades pinned back, slow on the way down."],
+            ["Lat pulldown", "3 × 10", "Pull to your upper chest, don't lean back more than a little."],
+            ["Dumbbell Romanian deadlift", "3 × 10", "Hinge at the hips, soft knees, flat back."],
+            ["Plank", "3 × 30s", "Squeeze your glutes, don't let your hips sag."] ] },
+          { name: "Day B · Full body", ex: [
+            ["Leg press", "3 × 12", "Feet shoulder-width, don't lock your knees at the top."],
+            ["Seated cable row", "3 × 12", "Chest tall, pull elbows past your ribs."],
+            ["Dumbbell shoulder press", "3 × 10", "Ribs down, press straight up."],
+            ["Glute bridge", "3 × 12", "Pause one second at the top."],
+            ["Dead bug", "3 × 8 / side", "Lower back stays pressed into the floor."] ] },
+          { name: "Day C · Full body + cardio", ex: [
+            ["Walking lunge", "3 × 10 / leg", "Long step, back knee kisses the floor."],
+            ["Incline dumbbell press", "3 × 10", "Bench at about 30°, control the weight."],
+            ["Assisted pull-up", "3 × 8", "Full hang to chin over the bar."],
+            ["Cable face pull", "3 × 12", "Pull to your eyes, elbows high."],
+            ["Incline treadmill walk", "15 min", "Speed 5, incline 8–10. You should still be able to talk."] ] }
+        ]
+      },
+      fatloss: {
+        note: "4 days a week plus 8,000–10,000 steps daily. Strength keeps your muscle while you lose fat. Get some protein in every meal.",
+        days: [
+          { name: "Day 1 · Lower body + intervals", ex: [
+            ["Back squat or leg press", "4 × 10", "Controlled down, drive up."],
+            ["Romanian deadlift", "3 × 10", "Feel it in your hamstrings, not your back."],
+            ["Walking lunge", "3 × 12 / leg", "Keep your torso upright."],
+            ["Bike intervals", "8 rounds", "20 sec hard, 40 sec easy."] ] },
+          { name: "Day 2 · Upper body + incline walk", ex: [
+            ["Dumbbell bench press", "4 × 10", "Elbows at about 45°."],
+            ["Lat pulldown", "4 × 10", "Squeeze your back at the bottom."],
+            ["Seated dumbbell press", "3 × 12", ""],
+            ["Cable row", "3 × 12", ""],
+            ["Incline walk", "20 min", "Steady pace, incline 10."] ] },
+          { name: "Day 3 · Full-body circuit", ex: [
+            ["Kettlebell swing", "40 sec", "Snap the hips, arms just guide the bell."],
+            ["Push-up", "40 sec", "Knees down is fine, keep the body straight."],
+            ["Goblet squat", "40 sec", ""],
+            ["Battle ropes", "40 sec", "Fast alternating waves."],
+            ["Rest, then repeat", "4 rounds", "Rest 20 sec between moves, 90 sec between rounds."] ] },
+          { name: "Day 4 · Conditioning", ex: [
+            ["Rower", "5 × 500 m", "Rest 1 min between."],
+            ["Farmer's carry", "4 × 30 m", "Heavy, tall posture."],
+            ["Plank + side plank", "3 rounds", "30 sec each."] ] }
+        ]
+      },
+      muscle: {
+        note: "4 days a week, upper / lower split. Add a little weight or one rep each week. Sleep 7+ hours and eat in a slight surplus.",
+        days: [
+          { name: "Upper A", ex: [
+            ["Barbell bench press", "4 × 6–8", "Feet planted, bar to mid-chest."],
+            ["Barbell row", "4 × 8", "Flat back, pull to your belly button."],
+            ["Seated dumbbell press", "3 × 10", ""],
+            ["Lat pulldown", "3 × 10", ""],
+            ["Curl + triceps pushdown", "3 × 12 each", "Superset, rest 60 sec."] ] },
+          { name: "Lower A", ex: [
+            ["Back squat", "4 × 6–8", "Brace hard before every rep."],
+            ["Romanian deadlift", "3 × 8", ""],
+            ["Leg press", "3 × 12", ""],
+            ["Lying leg curl", "3 × 12", ""],
+            ["Standing calf raise", "4 × 15", "Pause at the bottom stretch."] ] },
+          { name: "Upper B", ex: [
+            ["Incline dumbbell press", "4 × 8–10", ""],
+            ["Pull-up / assisted", "4 × 6–10", ""],
+            ["Cable fly", "3 × 12", ""],
+            ["Chest-supported row", "3 × 10", ""],
+            ["Lateral raise", "4 × 15", "Lead with your elbows, light weight."] ] },
+          { name: "Lower B", ex: [
+            ["Deadlift", "3 × 5", "Ask a coach to check your setup first."],
+            ["Bulgarian split squat", "3 × 10 / leg", ""],
+            ["Leg extension", "3 × 15", ""],
+            ["Hip thrust", "3 × 10", ""],
+            ["Hanging knee raise", "3 × 12", ""] ] }
+        ]
+      }
+    };
+
+    function renderPlan(goal) {
+      const p = PLANS[goal];
+      $("#plan-days").innerHTML = p.days.map((d, i) => `
+        <details class="day" ${i === 0 ? "open" : ""}>
+          <summary><b>${esc(d.name)}</b><span class="chev">▾</span></summary>
+          <div class="list">${d.ex.map(([n, s, c]) => `<div class="ex"><b>${esc(n)}</b><span class="sets">${esc(s)}</span>${c ? `<span class="cue">${esc(c)}</span>` : ""}</div>`).join("")}</div>
+        </details>`).join("");
+      $("#plan-note").textContent = p.note;
+    }
+    $("#seg").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      $$("#seg button").forEach((x) => x.classList.toggle("on", x === b));
+      renderPlan(b.dataset.goal);
+    });
+    renderPlan("beginner");
+
+    // ---------- PT consultation -> lead ----------
+    $("#pt-coach").innerHTML = `<option>Any coach</option>` + GYM.trainers.map((t) => `<option>${esc(t.name)}</option>`).join("");
+    choices();
+    $("#pt-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = $("#pt-name").value.trim(), phone = $("#pt-phone").value.replace(/\D/g, "");
+      if (!name || phone.length < 10) { toast("Please add your name and a 10-digit number"); return; }
+      Store.addLead({ name, phone, goal: chosen($("#pt-goal"))[0], coach: $("#pt-coach").value, source: "pt" });
+      $("#pt-form").classList.add("hidden"); $("#pt-done").classList.remove("hidden");
+    });
+
+    // ---------- Issue -> owner inbox ----------
+    $("#issue-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = $("#is-msg").value.trim();
+      if (!msg) { toast("Tell us what's wrong"); $("#is-msg").focus(); return; }
+      Store.addFeedback({ kind: "issue", rating: null, tags: chosen($("#is-tag")), message: msg, name: current?.name || "", phone: current?.phone || "" });
+      $("#issue-form").classList.add("hidden"); $("#is-done").classList.remove("hidden");
+    });
+
+    reveal();
+    if (location.hash === "#checkin") $("#ci-phone").focus();
+  </script>
+</body>
+</html>

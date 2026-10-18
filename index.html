@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Krunch Fitness Studio · Saidabad</title>
+  <meta name="description" content="Saidabad's cleanest gym. Coaches who correct your form. Your first workout is free.">
+  <meta name="theme-color" content="#060606">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://assets.mixkit.co">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+    section { position: relative; }
+    .sec { padding: 120px 0; }
+    @media (max-width: 759px) { .sec { padding: 88px 0; } }
+    .h2 { font-size: clamp(40px, 7vw, 88px); line-height: .98; letter-spacing: -0.045em; font-weight: 500; margin: 18px 0 0; }
+    .lead { font-size: 18px; color: var(--muted); max-width: 520px; margin: 20px 0 0; }
+
+    /* ---------- HERO ---------- */
+    .hero { padding: 10px; height: 100svh; min-height: 640px; }
+    .hero-frame { position: relative; height: 100%; border-radius: 28px; overflow: hidden; background: #111; isolation: isolate; }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transform-origin: 50% 60%; }
+    .hero-frame::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 22%),
+        linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 70%),
+        linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 60%);
+    }
+
+    .nav { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 0; }
+    @media (min-width: 760px) { .nav { padding: 24px 28px 0; } }
+    .nav-pill { display: none; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid var(--line); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .nav-pill a { padding: 8px 16px; border-radius: 999px; font-size: 14px; text-decoration: none; color: rgba(255,255,255,.75); transition: background .3s, color .3s; }
+    .nav-pill a:hover { background: rgba(255,255,255,.1); color: #fff; }
+    @media (min-width: 900px) { .nav-pill { display: flex; } }
+
+    .hero-content { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 20px 28px; }
+    @media (min-width: 760px) { .hero-content { padding: 0 44px 44px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 40px; } }
+    .hero h1 { font-size: clamp(48px, 9.4vw, 132px); line-height: .92; letter-spacing: -0.055em; font-weight: 500; margin: 18px 0 0; max-width: 11ch; }
+    .hero h1 .serif { letter-spacing: -0.03em; }
+    .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+    .w > span { display: inline-block; will-change: transform; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,.75); max-width: 440px; margin: 22px 0 26px; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .hero-side { display: none; }
+    @media (min-width: 760px) { .hero-side { display: grid; gap: 10px; justify-items: end; } }
+    .proof-card { display: flex; align-items: center; gap: 14px; padding: 14px 18px 14px 14px; border-radius: 20px; background: rgba(255,255,255,.07); border: 1px solid var(--line); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+    .proof-card .g { width: 40px; height: 40px; border-radius: 12px; background: #fff; display: grid; place-items: center; }
+    .proof-card .g svg { width: 22px; height: 22px; }
+    .proof-card b { font-size: 20px; letter-spacing: -0.02em; }
+    .proof-card .st { color: #ffc93c; letter-spacing: 2px; font-size: 13px; }
+    .scroll-cue { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255,255,255,.6); }
+    .scroll-cue i { width: 1px; height: 36px; background: linear-gradient(rgba(255,255,255,.7), transparent); animation: cue 2s var(--ease) infinite; transform-origin: top; }
+    @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+    /* ---------- MARQUEE ---------- */
+    .marquee { padding: 34px 0; overflow: hidden; border-bottom: 1px solid var(--line); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+    .marquee-track { display: flex; gap: 56px; width: max-content; animation: mq 32s linear infinite; align-items: center; }
+    .marquee-track span { font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.04em; color: rgba(255,255,255,.22); white-space: nowrap; }
+    .marquee-track .serif { color: rgba(255,255,255,.5); }
+    .marquee-track b { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; }
+    @keyframes mq { to { transform: translateX(-50%); } }
+
+    /* ---------- STATEMENT ---------- */
+    .statement p { font-size: clamp(30px, 4.6vw, 64px); line-height: 1.1; letter-spacing: -0.04em; font-weight: 400; margin: 0; max-width: 18ch; }
+    @media (min-width: 900px) { .statement p { max-width: 22ch; } }
+    .statement .sw { display: inline; }
+    .statement .serif { color: var(--text); }
+
+    /* ---------- EXPANDING VIDEO ---------- */
+    .expand { height: 100svh; overflow: hidden; display: grid; place-items: center; }
+    .expand-media { position: absolute; inset: 0; clip-path: inset(18% 24% 18% 24% round 28px); will-change: clip-path; }
+    .expand-media video { width: 100%; height: 100%; object-fit: cover; }
+    .expand-media::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.45); }
+    .expand-copy { position: relative; z-index: 2; text-align: center; padding: 0 20px; }
+    .expand-copy h2 { font-size: clamp(44px, 8vw, 120px); line-height: .95; letter-spacing: -0.05em; font-weight: 500; margin: 0 0 28px; }
+
+    /* ---------- BENTO ---------- */
+    .bento { display: grid; gap: 12px; margin-top: 56px; grid-template-columns: 1fr; }
+    @media (min-width: 760px) { .bento { grid-template-columns: repeat(6, 1fr); grid-auto-rows: 250px; } }
+    .tile { position: relative; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)); padding: 26px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 220px; }
+    .tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform 1.2s var(--ease); }
+    .tile:hover video { transform: scale(1.05); }
+    .tile.has-video::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(0,0,0,.85), rgba(0,0,0,.1) 60%); }
+    .tile > *:not(video) { position: relative; z-index: 2; }
+    .tile h3 { font-size: 26px; letter-spacing: -0.035em; font-weight: 500; margin: 0 0 6px; line-height: 1.05; }
+    .tile p { margin: 0; color: var(--muted); font-size: 15px; max-width: 34ch; }
+    .tile .big { font-size: clamp(64px, 7vw, 96px); letter-spacing: -0.06em; line-height: .9; font-weight: 500; margin-bottom: 10px; }
+    .tile .big .serif { color: var(--accent); }
+    .tile .badge { position: absolute; top: 20px; left: 20px; z-index: 2; }
+    @media (min-width: 760px) {
+      .t-a { grid-column: span 4; grid-row: span 2; }
+      .t-b { grid-column: span 2; }
+      .t-c { grid-column: span 2; }
+      .t-d { grid-column: span 3; }
+      .t-e { grid-column: span 3; }
+    }
+    .t-a { min-height: 460px; }
+    .tile .glow { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(255,45,70,.35), transparent 70%); top: -80px; right: -80px; z-index: 0; filter: blur(10px); }
+
+    /* ---------- THEMES ---------- */
+    .themes { display: grid; gap: 48px; }
+    @media (min-width: 900px) { .themes { grid-template-columns: .9fr 1.1fr; gap: 80px; align-items: center; } }
+    .theme-row { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .theme-row:first-child { border-top: 1px solid var(--line); }
+    .theme-row span { font-size: 20px; letter-spacing: -0.02em; }
+    .theme-row b { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .theme-bar { grid-column: 1 / -1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+    .theme-bar i { display: block; height: 100%; width: var(--w); background: linear-gradient(90deg, var(--accent), #ff8a5b); border-radius: inherit; transform-origin: left; }
+
+    /* ---------- COACHES (horizontal) ---------- */
+    .coaches { overflow: hidden; }
+    .coach-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+    .coach-track { display: flex; gap: 14px; margin-top: 56px; padding: 0 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .coach-track::-webkit-scrollbar { display: none; }
+    @media (min-width: 760px) { .coach-track { padding: 0 40px; } }
+    @media (min-width: 900px) { .coach-track { overflow: visible; width: max-content; padding-right: 30vw; } }
+    .coach { flex: none; width: min(78vw, 360px); aspect-ratio: 3 / 4; border-radius: var(--radius); border: 1px solid var(--line); position: relative; overflow: hidden; scroll-snap-align: start; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; background: #0e0e0f; }
+    .coach::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 80% at 20% 0%, var(--tint), transparent 60%); opacity: .55; transition: opacity .6s var(--ease); }
+    .coach:hover::before { opacity: .9; }
+    .coach > * { position: relative; }
+    .coach .mono { font-family: var(--serif); font-style: italic; font-size: 150px; line-height: .8; letter-spacing: -0.04em; color: rgba(255,255,255,.9); }
+    .coach h3 { font-size: 30px; letter-spacing: -0.04em; font-weight: 500; margin: 0; }
+    .coach .role { color: rgba(255,255,255,.7); font-size: 15px; margin: 4px 0 14px; }
+    .coach .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+
+    /* ---------- PLANS ---------- */
+    .plans { display: grid; gap: 12px; margin-top: 56px; }
+    @media (min-width: 760px) { .plans { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1100px) { .plans { grid-template-columns: repeat(4, 1fr); } }
+    .plan { position: relative; border-radius: var(--radius); padding: 28px; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012)); display: flex; flex-direction: column; gap: 22px; }
+    .plan.featured { border-color: transparent; background: linear-gradient(#0f0f10, #0f0f10) padding-box, conic-gradient(from var(--ang, 0deg), var(--accent), #ff9a5b, rgba(255,255,255,.1), var(--accent)) border-box; border: 1px solid transparent; animation: spin 6s linear infinite; box-shadow: 0 30px 80px -30px rgba(255,45,70,.5); }
+    @property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+    @keyframes spin { to { --ang: 360deg; } }
+    .plan .name { display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--muted); }
+    .plan .price { font-size: 52px; letter-spacing: -0.05em; line-height: 1; font-weight: 500; }
+    .plan .price small { font-size: 15px; letter-spacing: 0; color: var(--muted); font-weight: 400; }
+    .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 15px; color: rgba(255,255,255,.82); flex: 1; }
+    .plan li { display: flex; gap: 10px; }
+    .plan li svg { width: 16px; height: 16px; flex: none; margin-top: 3px; color: var(--ok); }
+
+    /* ---------- TRIAL ---------- */
+    .trial { margin: 0 10px; border-radius: 28px; overflow: hidden; isolation: isolate; }
+    .trial > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .trial::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(0,0,0,.88), rgba(0,0,0,.55)); }
+    .trial-grid { display: grid; gap: 40px; }
+    @media (min-width: 900px) { .trial-grid { grid-template-columns: 1fr 440px; gap: 80px; align-items: center; } }
+    .steps { list-style: none; padding: 0; margin: 36px 0 0; display: grid; gap: 22px; }
+    .steps li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; }
+    .steps .n { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; font-size: 14px; color: var(--muted); }
+    .steps b { display: block; font-weight: 500; font-size: 17px; letter-spacing: -0.02em; }
+    .steps p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+    .form-card { padding: 26px; border-radius: 24px; background: rgba(20,20,22,.6); border: 1px solid var(--line-2); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3); }
+    .done { text-align: center; padding: 24px 6px; }
+    .done .tick { width: 72px; height: 72px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; margin: 0 auto 18px; }
+    .done .tick svg { width: 32px; height: 32px; }
+    .done h3 { font-size: 28px; letter-spacing: -0.04em; font-weight: 500; margin: 0 0 6px; }
+
+    /* ---------- VISIT + FOOTER ---------- */
+    .visit { display: grid; gap: 12px; margin-top: 56px; }
+    @media (min-width: 900px) { .visit { grid-template-columns: 1fr 1.5fr; } }
+    .info { display: flex; flex-direction: column; justify-content: space-between; gap: 28px; }
+    .info dl { margin: 0; display: grid; gap: 22px; }
+    .info dt { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .info dd { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+    .info dd a { text-decoration: none; }
+    .map { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); min-height: 340px; }
+    .map iframe { width: 100%; height: 100%; min-height: 340px; border: 0; filter: grayscale(1) invert(.92) contrast(.9); }
+
+    footer { padding: 80px 0 120px; overflow: hidden; }
+    @media (min-width: 760px) { footer { padding-bottom: 40px; } }
+    .wordmark { font-size: clamp(90px, 25vw, 360px); letter-spacing: -0.07em; font-weight: 600; line-height: .8; margin: 0; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.18); white-space: nowrap; }
+    .wordmark .serif { -webkit-text-stroke: 0; color: var(--accent); }
+    .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+    .foot nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    .foot a { text-decoration: none; color: var(--muted); transition: color .3s; }
+    .foot a:hover { color: var(--text); }
+
+    .mbar { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 60; display: grid; grid-template-columns: auto 1fr; gap: 8px; padding: 6px; border-radius: 999px; background: rgba(20,20,22,.72); border: 1px solid var(--line-2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); transform: translateY(150%); transition: transform .6s var(--ease); }
+    .mbar.show { transform: none; }
+    .mbar .btn { min-height: 46px; }
+    @media (min-width: 760px) { .mbar { display: none; } }
+
+    .demo-note { position: absolute; top: 78px; left: 50%; transform: translateX(-50%); z-index: 11; }
+    @media (min-width: 900px) { .demo-note { top: 34px; } }
+  </style>
+</head>
+<body>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-frame">
+      <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="auto"></video>
+      <span class="demo-flag demo-note">Demo for Krunch · sample prices</span>
+
+      <header class="nav">
+        <a href="#" class="brand"><span class="brand-logo">K</span><span class="brand-name">Krunch <small>Fitness</small></span></a>
+        <nav class="nav-pill">
+          <a href="#why">Why Krunch</a>
+          <a href="#coaches">Coaches</a>
+          <a href="#plans">Plans</a>
+          <a href="#visit">Visit</a>
+          <a href="member.html">Members</a>
+        </nav>
+        <a href="#trial" class="btn btn-light btn-sm">Free trial</a>
+      </header>
+
+      <div class="hero-content">
+        <div>
+          <span class="kicker" data-hero><span class="dot"></span> Saidabad, Hyderabad · <span id="hours-k"></span></span>
+          <h1 id="hero-title">Train where Saidabad gets <span class="serif">stronger.</span></h1>
+          <p class="hero-sub" data-hero>Spotless floors, coaches who fix your form on every set, and members who've stayed for years. Your first workout is on us.</p>
+          <div class="hero-cta" data-hero>
+            <a href="#trial" class="btn btn-light">Book a free trial <span class="arrow" data-icon="arrow"></span></a>
+            <a id="hero-wa" class="btn" target="_blank" rel="noopener"><span data-icon="wa"></span> WhatsApp</a>
+          </div>
+        </div>
+        <div class="hero-side" data-hero>
+          <a class="proof-card" id="g-card" target="_blank" rel="noopener" style="text-decoration:none">
+            <span class="g" data-icon="google"></span>
+            <span><b id="g-count"></b> <span class="muted small">Google reviews</span><br><span class="st">★★★★★</span> <span class="tiny muted">from real members</span></span>
+          </a>
+          <span class="scroll-cue"><i></i> Scroll</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="mq"></div>
+  </div>
+
+  <!-- STATEMENT -->
+  <section class="sec statement" id="why">
+    <div class="wrap">
+      <span class="kicker" data-reveal><span class="dot"></span> Why members stay</span>
+      <p id="statement" style="margin-top:28px">People don't stay at a gym for <span class="serif">four years</span> because of the machines. They stay because the floor is spotless, the coaches know their names, and someone fixes their form on <span class="serif">every set.</span></p>
+    </div>
+  </section>
+
+  <!-- EXPANDING VIDEO -->
+  <section class="expand" id="expand">
+    <div class="expand-media"><video autoplay muted loop playsinline preload="metadata" data-src="https://assets.mixkit.co/videos/52089/52089-720.mp4"></video></div>
+    <div class="expand-copy">
+      <h2 id="expand-title">Your first workout<br>is <span class="serif">on us.</span></h2>
+      <a href="#trial" class="btn btn-light">Claim free trial <span class="arrow" data-icon="arrow"></span></a>
+    </div>
+  </section>
+
+  <!-- BENTO -->
+  <section class="sec">
+    <div class="wrap">
+      <span class="kicker" data-reveal><span class="dot"></span> What members say</span>
+      <h2 class="h2" data-reveal>Every claim here came<br>from a <span class="serif">real review.</span></h2>
+      <div class="bento">
+        <article class="tile has-video t-a" data-reveal>
+          <video autoplay muted loop playsinline preload="metadata" data-src="https://assets.mixkit.co/videos/52111/52111-720.mp4"></video>
+          <span class="chip badge">#1 in reviews</span>
+          <h3>Spotless. Every single day.</h3>
+          <p>Cleanliness is the thing members mention most. Floors and machines get wiped down all day.</p>
+        </article>
+        <article class="tile t-b" data-reveal>
+          <div class="glow"></div>
+          <div class="big"><span data-count="4">0</span><span class="serif">+</span></div>
+          <h3>Years members stay</h3>
+          <p>Members who've trained here for 2, 3 and 4 years.</p>
+        </article>
+        <article class="tile t-c" data-reveal>
+          <div class="big"><span data-count="6">0</span></div>
+          <h3>Coaches thanked by name</h3>
+          <p>Members name their coaches in reviews.</p>
+        </article>
+        <article class="tile has-video t-d" data-reveal>
+          <video autoplay muted loop playsinline preload="metadata" data-src="https://assets.mixkit.co/videos/52099/52099-720.mp4"></video>
+          <h3>Coaches who fix your form</h3>
+          <p>They listen to your goal, correct every rep and push you without pressure.</p>
+        </article>
+        <article class="tile t-e" data-reveal>
+          <div class="big">10<span class="serif">pm</span></div>
+          <h3>Open late, every day</h3>
+          <p>Strength, machines and cardio. Train after work without rushing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEMES -->
+  <section class="sec" style="padding-top:40px">
+    <div class="wrap themes">
+      <div>
+        <span class="kicker" data-reveal><span class="dot"></span> Google reviews</span>
+        <h2 class="h2" data-reveal><span id="rev-count"></span> reviews.<br><span class="serif">One pattern.</span></h2>
+        <p class="lead" data-reveal>These are the topics Google picks out of our reviews most often. Cleanliness and coaching come up again and again.</p>
+        <div data-reveal style="margin-top:28px"><a id="all-reviews" class="btn" target="_blank" rel="noopener"><span data-icon="google"></span> Read every review</a></div>
+      </div>
+      <div id="themes"></div>
+    </div>
+  </section>
+
+  <!-- COACHES -->
+  <section class="sec coaches" id="coaches">
+    <div class="wrap coach-head">
+      <div>
+        <span class="kicker" data-reveal><span class="dot"></span> Coaches</span>
+        <h2 class="h2" data-reveal>The people members<br><span class="serif">thank by name.</span></h2>
+      </div>
+      <p class="muted" style="max-width:340px;margin:0" data-reveal>Every coach below is named in our Google reviews. Real photos are coming after our shoot.</p>
+    </div>
+    <div class="coach-track" id="coach-track"></div>
+  </section>
+
+  <!-- PLANS -->
+  <section class="sec" id="plans">
+    <div class="wrap">
+      <span class="kicker" data-reveal><span class="dot"></span> Membership</span>
+      <h2 class="h2" data-reveal>Simple plans.<br><span class="serif">No surprises.</span></h2>
+      <p class="lead" data-reveal>Every plan comes with a starter workout for your goal in the member app, so you're never guessing on day one.</p>
+      <div class="plans" id="plans-grid"></div>
+    </div>
+  </section>
+
+  <!-- TRIAL -->
+  <section class="sec trial" id="trial">
+    <video autoplay muted loop playsinline preload="none" data-src="https://assets.mixkit.co/videos/52097/52097-720.mp4"></video>
+    <div class="wrap trial-grid">
+      <div>
+        <span class="kicker" data-reveal><span class="dot"></span> Free trial</span>
+        <h2 class="h2" data-reveal>Come train<br><span class="serif">with us, free.</span></h2>
+        <ol class="steps">
+          <li data-reveal><span class="n">01</span><div><b>Tell us your goal</b><p>Fat loss, muscle, or just getting started.</p></div></li>
+          <li data-reveal><span class="n">02</span><div><b>We call you within the hour</b><p>We'll pick a time when it's not crowded.</p></div></li>
+          <li data-reveal><span class="n">03</span><div><b>Train with a coach</b><p>A coach walks you through your first session.</p></div></li>
+        </ol>
+      </div>
+      <div class="form-card" data-reveal>
+        <form id="trial-form" novalidate>
+          <div class="field"><label for="t-name">Name</label><input class="input" id="t-name" autocomplete="name" placeholder="Your name"></div>
+          <div class="field"><label for="t-phone">Mobile</label><input class="input" id="t-phone" inputmode="tel" autocomplete="tel" placeholder="10-digit number"></div>
+          <div class="field"><label>Goal</label>
+            <div class="choice-row" data-choice id="t-goal"><span class="choice on">Fat loss</span><span class="choice">Muscle gain</span><span class="choice">Women's fitness</span><span class="choice">Just starting</span></div>
+          </div>
+          <div class="field"><label>Best time</label>
+            <div class="choice-row" data-choice id="t-time"><span class="choice on">Morning</span><span class="choice">Afternoon</span><span class="choice">Evening</span></div>
+          </div>
+          <button class="btn btn-light btn-block" type="submit" style="margin-top:6px">Book my free trial <span class="arrow" data-icon="arrow"></span></button>
+          <p class="tiny faint" style="margin:12px 0 0;text-align:center">We only use your number to confirm your trial.</p>
+        </form>
+        <div id="trial-done" class="done hidden">
+          <div class="tick" data-icon="check"></div>
+          <h3>You're in.</h3>
+          <p class="muted" style="margin:0 0 22px">The team has your request and will call to confirm a time.</p>
+          <a id="trial-wa" class="btn btn-block" target="_blank" rel="noopener"><span data-icon="wa"></span> Also send on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="sec" id="visit">
+    <div class="wrap">
+      <span class="kicker" data-reveal><span class="dot"></span> Visit</span>
+      <h2 class="h2" data-reveal>Find us in <span class="serif">Saidabad.</span></h2>
+      <div class="visit">
+        <div class="card info" data-reveal>
+          <dl>
+            <div><dt>Address</dt><dd id="addr"></dd></div>
+            <div><dt>Phone</dt><dd><a id="tel"></a></dd></div>
+            <div><dt>Hours</dt><dd id="hours"></dd></div>
+          </dl>
+          <a id="directions" class="btn btn-light btn-block" target="_blank" rel="noopener">Get directions <span class="arrow" data-icon="arrow"></span></a>
+        </div>
+        <div class="map" data-reveal><iframe id="map" title="Map to Krunch Fitness Studio" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p class="wordmark" id="wordmark">Krunch<span class="serif">.</span></p>
+      <div class="foot">
+        <span>© Krunch Fitness Studio, Saidabad</span>
+        <nav><a href="member.html">Member app</a><a href="feedback.html">Feedback</a><a href="admin.html">Owner dashboard</a></nav>
+      </div>
+    </div>
+  </footer>
+
+  <div class="mbar" id="mbar">
+    <a id="bar-call" class="btn" aria-label="Call"><span data-icon="phone"></span></a>
+    <a href="#trial" class="btn btn-light">Book free trial <span class="arrow" data-icon="arrow"></span></a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/store.js"></script>
+  <script src="assets/ui.js"></script>
+  <script>
+    const { $, $$, esc, rupees, icon, waLink, toast, choices, chosen } = UI;
+    $$("[data-icon]").forEach((el) => (el.innerHTML = icon[el.dataset.icon]));
+
+    // ---------- Content from config ----------
+    const portrait = innerWidth / innerHeight < 0.85;
+    $("#hero-video").src = portrait
+      ? "https://assets.mixkit.co/videos/52079/52079-720.mp4"   // vertical cut for phones
+      : "https://assets.mixkit.co/videos/52317/52317-1080.mp4";
+    $("#hero-video").play().catch(() => {});
+    $("#hours-k").textContent = GYM.hours.replace("Open daily · ", "Open ");
+    $("#hero-wa").href = waLink(GYM.whatsapp, `Hi ${GYM.fullName}, I saw your website and want to know about membership.`);
+    $("#g-card").href = GYM.reviewUrl;
+    $("#g-count").textContent = GYM.googleReviews;
+    $("#rev-count").textContent = GYM.googleReviews;
+    $("#all-reviews").href = GYM.reviewUrl;
+    $("#addr").textContent = GYM.address;
+    $("#tel").textContent = GYM.phoneDisplay;
+    $("#tel").href = $("#bar-call").href = "tel:" + GYM.phone;
+    $("#hours").textContent = GYM.hours;
+    $("#directions").href = GYM.mapsUrl;
+    $("#map").src = `https://maps.google.com/maps?q=${GYM.lat},${GYM.lng}&z=16&output=embed`;
+
+    const words = ["Clean", "<span class='serif'>Coached</span>", "Consistent", "<span class='serif'>Saidabad</span>", "Strong", "<span class='serif'>Since years</span>"];
+    $("#mq").innerHTML = (words.map((w) => `<span>${w}</span><b></b>`).join("")).repeat(2);
+
+    const max = Math.max(...GYM.reviewThemes.map((t) => t.count));
+    $("#themes").innerHTML = GYM.reviewThemes.map((t) =>
+      `<div class="theme-row" data-reveal><span>${esc(t.label)}</span><b>${t.count} mentions</b><span class="theme-bar"><i style="--w:${(t.count / max) * 100}%"></i></span></div>`).join("");
+
+    const tints = ["rgba(255,45,70,.55)", "rgba(255,138,91,.5)", "rgba(155,107,255,.45)", "rgba(61,220,132,.35)", "rgba(80,150,255,.45)", "rgba(255,201,60,.4)"];
+    $("#coach-track").innerHTML = GYM.trainers.map((t, i) => `
+      <article class="coach" style="--tint:${tints[i % tints.length]}">
+        <span class="mono">${esc(t.name[0])}</span>
+        <div>
+          <h3>${esc(t.name)}</h3>
+          <div class="role">${esc(t.role)}</div>
+          <div class="row"><span class="small muted">${esc(t.note)}</span><span class="chip" style="padding:6px 10px;font-size:12px">In reviews</span></div>
+        </div>
+      </article>`).join("");
+
+    $("#plans-grid").innerHTML = GYM.plans.map((p) => `
+      <article class="plan ${p.featured ? "featured" : ""}" data-reveal>
+        <div class="name"><span>${esc(p.name)}</span>${p.featured ? '<span class="tag tag-red">Most picked</span>' : ""}</div>
+        <div class="price">${rupees(p.price)}<small> ${p.note || (p.months === 1 ? "/ month" : `/ ${p.months} mo`)}</small></div>
+        <ul>${p.perks.map((x) => `<li>${icon.check}<span>${esc(x)}</span></li>`).join("")}</ul>
+        <a href="#trial" class="btn ${p.featured ? "btn-light" : ""} btn-block">Start free</a>
+      </article>`).join("");
+
+    // Lazy-load background clips once they're near the viewport
+    const vio = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const v = e.target; v.src = v.dataset.src; v.play().catch(() => {}); vio.unobserve(v);
+    }), { rootMargin: "400px" });
+    $$("video[data-src]").forEach((v) => vio.observe(v));
+
+    // ---------- Trial form -> lead in owner dashboard ----------
+    choices();
+    $("#trial-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = $("#t-name").value.trim();
+      const phone = $("#t-phone").value.replace(/\D/g, "");
+      if (!name) { toast("Please add your name"); $("#t-name").focus(); return; }
+      if (phone.length < 10) { toast("Please enter a 10-digit mobile number"); $("#t-phone").focus(); return; }
+      const goal = chosen($("#t-goal"))[0], time = chosen($("#t-time"))[0];
+      Store.addLead({ name, phone, goal, time, source: "trial" });
+      $("#trial-wa").href = waLink(GYM.whatsapp, `Hi, I'm ${name}. I just booked a free trial on your website. Goal: ${goal}. Best time: ${time}.`);
+      $("#trial-form").classList.add("hidden");
+      $("#trial-done").classList.remove("hidden");
+    });
+
+    // Browsers pause muted videos in background tabs; resume when visible again
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) $$("video").forEach((v) => v.src && v.play().catch(() => {}));
+    });
+
+    // Mobile action bar appears after the hero
+    addEventListener("scroll", () => $("#mbar").classList.toggle("show", scrollY > innerHeight * 0.8), { passive: true });
+
+    // Smooth anchor scrolling (Lenis if present)
+    let lenis;
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute("href");
+      e.preventDefault();
+      if (id === "#") { lenis ? lenis.scrollTo(0) : scrollTo({ top: 0, behavior: "smooth" }); return; }
+      const t = $(id); if (!t) return;
+      lenis ? lenis.scrollTo(t, { offset: 0, duration: 1.6 }) : t.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // ---------- Motion ----------
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Split a heading into masked words (keeps inner spans like .serif)
+    function splitWords(el) {
+      const out = [];
+      const walk = (node, wrapClass) => {
+        [...node.childNodes].forEach((n) => {
+          if (n.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach((part) => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+              const w = document.createElement("span"); w.className = "w";
+              const inner = document.createElement("span"); inner.textContent = part;
+              if (wrapClass) inner.className = wrapClass;
+              w.appendChild(inner); frag.appendChild(w); out.push(inner);
+            });
+            n.replaceWith(frag);
+          } else if (n.nodeType === 1 && n.tagName !== "BR") {
+            const cls = n.className;
+            const holder = document.createDocumentFragment();
+            [...n.childNodes].forEach((c) => holder.appendChild(c));
+            const tmp = document.createElement("span"); tmp.appendChild(holder);
+            walk(tmp, cls);
+            n.replaceWith(...tmp.childNodes);
+          }
+        });
+      };
+      walk(el, "");
+      return out;
+    }
+
+    if (window.gsap && window.ScrollTrigger && !reduce) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (window.Lenis) {
+        lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((t) => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      // Hero intro
+      const heroWords = splitWords($("#hero-title"));
+      const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+      intro
+        .from("#hero-video", { scale: 1.25, duration: 2.4, ease: "power3.out" }, 0)
+        .from(".nav", { y: -20, opacity: 0, duration: 1.2 }, 0.2)
+        .from(heroWords, { yPercent: 115, rotate: 4, duration: 1.4, stagger: 0.07 }, 0.35)
+        .from("[data-hero]", { y: 24, opacity: 0, filter: "blur(10px)", duration: 1.2, stagger: 0.1 }, 0.8);
+
+      // Hero parallax out
+      gsap.to("#hero-video", { scale: 1.15, yPercent: 8, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+      gsap.to(".hero-content", { y: -80, opacity: 0, ease: "none", scrollTrigger: { trigger: ".hero", start: "40% top", end: "bottom top", scrub: true } });
+
+      // Statement: words light up as you scroll
+      const sw = splitWords($("#statement"));
+      gsap.fromTo(sw, { opacity: 0.12 }, { opacity: 1, stagger: 0.05, ease: "none",
+        scrollTrigger: { trigger: "#statement", start: "top 80%", end: "bottom 45%", scrub: true } });
+
+      // Expanding video
+      const mm = gsap.matchMedia();
+      mm.add({ desk: "(min-width: 760px)", mob: "(max-width: 759px)" }, (ctx) => {
+        const from = ctx.conditions.desk ? "inset(18% 24% 18% 24% round 28px)" : "inset(24% 6% 24% 6% round 24px)";
+        gsap.fromTo(".expand-media", { clipPath: from }, { clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none",
+          scrollTrigger: { trigger: "#expand", start: "top top", end: "+=110%", scrub: true, pin: true } });
+        gsap.from(".expand-copy", { scale: 0.85, opacity: 0, ease: "none",
+          scrollTrigger: { trigger: "#expand", start: "top top", end: "+=60%", scrub: true } });
+
+        // Coaches: horizontal scroll on desktop, native swipe on phones
+        if (ctx.conditions.desk && innerWidth >= 900) {
+          const track = $("#coach-track");
+          const dist = () => track.scrollWidth - innerWidth + 80;
+          gsap.to(track, { x: () => -dist(), ease: "none",
+            scrollTrigger: { trigger: "#coaches", start: "top top", end: () => "+=" + dist(), scrub: 1, pin: true, invalidateOnRefresh: true } });
+        }
+      });
+
+      // Generic reveals
+      $$("[data-reveal]").forEach((el) => {
+        gsap.from(el, { y: 50, opacity: 0, filter: "blur(8px)", duration: 1.3, ease: "expo.out",
+          scrollTrigger: { trigger: el, start: "top 88%" } });
+      });
+
+      // Theme bars grow
+      $$(".theme-bar i").forEach((b) => gsap.from(b, { scaleX: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: b, start: "top 90%" } }));
+
+      // Count-ups
+      $$("[data-count]").forEach((el) => {
+        const to = +el.dataset.count, o = { v: 0 };
+        gsap.to(o, { v: to, duration: 1.8, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 85%" },
+          onUpdate: () => (el.textContent = Math.round(o.v)) });
+      });
+
+      // Footer wordmark slides up
+      gsap.from("#wordmark", { yPercent: 60, opacity: 0, ease: "none", scrollTrigger: { trigger: "footer", start: "top bottom", end: "top 40%", scrub: true } });
+
+      addEventListener("load", () => ScrollTrigger.refresh());
+    } else {
+      $$("[data-count]").forEach((el) => (el.textContent = el.dataset.count));
+    }
+  </script>
+</body>
+</html>

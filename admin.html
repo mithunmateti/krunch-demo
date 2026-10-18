@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Krunch Owner Dashboard</title>
+  <meta name="theme-color" content="#060606">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 120px; }
+    @media (min-width: 900px) { main { padding: 28px 32px 60px; } }
+    h1 { font-size: clamp(38px, 8vw, 64px); line-height: .95; letter-spacing: -0.05em; font-weight: 500; margin: 10px 0 8px; }
+    h2 { font-size: 22px; letter-spacing: -0.03em; font-weight: 500; margin: 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 34px 0 12px; }
+    .section-head .muted { font-size: 13px; }
+
+    /* Tabs: top on desktop, bottom bar on phones */
+    .tabs { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px; border-radius: 24px; background: rgba(20,20,22,.78); border: 1px solid var(--line-2); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); }
+    .tab { position: relative; border: 0; background: none; color: var(--muted); padding: 8px 2px; border-radius: 18px; display: grid; justify-items: center; gap: 3px; font-size: 11px; cursor: pointer; transition: background .3s, color .3s; }
+    .tab svg { width: 21px; height: 21px; }
+    .tab.on { background: rgba(255,255,255,.1); color: var(--text); }
+    .tab .badge { position: absolute; top: 4px; right: calc(50% - 20px); min-width: 17px; height: 17px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 600; display: grid; place-items: center; }
+    @media (min-width: 900px) {
+      .tabs { position: sticky; top: 74px; left: auto; right: auto; bottom: auto; display: inline-flex; gap: 4px; margin-bottom: 8px; border-radius: 999px; padding: 5px; }
+      .tab { grid-auto-flow: column; gap: 8px; font-size: 14px; padding: 9px 16px; border-radius: 999px; }
+      .tab svg { width: 17px; height: 17px; }
+      .tab .badge { position: static; }
+    }
+
+    /* KPI */
+    .risk { position: relative; overflow: hidden; padding: 28px; border-radius: 26px; border: 1px solid rgba(255,45,70,.3); background: radial-gradient(120% 140% at 100% 0%, rgba(255,45,70,.28), rgba(255,45,70,.04) 55%, rgba(255,255,255,.02)); }
+    .risk .amt { font-size: clamp(54px, 12vw, 96px); letter-spacing: -0.06em; line-height: .9; font-weight: 500; margin: 10px 0 8px; font-variant-numeric: tabular-nums; }
+    .risk p { margin: 0 0 20px; color: rgba(255,255,255,.75); max-width: 460px; }
+    .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    @media (min-width: 760px) { .kpis { grid-template-columns: repeat(5, 1fr); } }
+    .kpi { padding: 18px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)); cursor: pointer; transition: border-color .3s, transform .4s var(--ease); text-align: left; }
+    .kpi:hover { border-color: var(--line-2); transform: translateY(-2px); }
+    .kpi b { display: block; font-size: 36px; letter-spacing: -0.05em; font-weight: 500; line-height: 1; margin-bottom: 8px; }
+    .kpi span { font-size: 13px; color: var(--muted); }
+    .kpi i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+    /* Scoreboard */
+    .score { display: grid; gap: 1px; grid-template-columns: repeat(2, 1fr); border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--line); }
+    @media (min-width: 760px) { .score { grid-template-columns: repeat(4, 1fr); } }
+    .score > div { background: #0b0b0c; padding: 20px; }
+    .score b { display: block; font-size: 30px; letter-spacing: -0.05em; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .score b.ok { color: var(--ok); }
+    .score span { font-size: 13px; color: var(--muted); }
+
+    /* Rows */
+    .list { display: grid; gap: 8px; }
+    .row { display: grid; grid-template-columns: auto 1fr; gap: 12px 14px; align-items: center; padding: 14px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); transition: opacity .4s, transform .5s var(--ease); }
+    @media (min-width: 760px) { .row { grid-template-columns: auto 1fr auto; } }
+    .row.out { opacity: 0; transform: translateX(30px) scale(.98); }
+    .av { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; font-weight: 600; font-size: 14px; color: #fff; }
+    .who b { font-weight: 500; letter-spacing: -0.01em; }
+    .who .meta { font-size: 13px; color: var(--muted); margin-top: 2px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .acts { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; }
+    @media (min-width: 760px) { .acts { grid-column: auto; justify-content: flex-end; } }
+    .acts .btn { min-height: 38px; padding: 0 14px; font-size: 13px; }
+    .wa { background: #25d366; border-color: #25d366; color: #06230f; }
+    .wa:hover { background: #3be27a; }
+    .msg { grid-column: 1 / -1; font-size: 14px; color: rgba(255,255,255,.85); padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.035); margin: 0; }
+    .empty { padding: 26px; text-align: center; color: var(--muted); border: 1px dashed var(--line-2); border-radius: 18px; font-size: 14px; }
+    .mini-stars { color: #ffc93c; letter-spacing: 1px; font-size: 13px; }
+    .mini-stars .off { color: rgba(255,255,255,.18); }
+
+    .qr-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 640px) { .qr-grid { grid-template-columns: 1fr 1fr; } }
+    .qr { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; }
+    .qr .code { background: #fff; padding: 10px; border-radius: 14px; width: 132px; height: 132px; }
+    .qr .code img, .qr .code canvas { width: 112px !important; height: 112px !important; }
+
+    .search { position: relative; }
+    .search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--faint); }
+    .search .input { padding-left: 44px; }
+    details.add summary { list-style: none; cursor: pointer; }
+    details.add summary::-webkit-details-marker { display: none; }
+    .add-grid { display: grid; gap: 0 10px; margin-top: 16px; }
+    @media (min-width: 640px) { .add-grid { grid-template-columns: 1fr 1fr 1fr auto; align-items: end; } .add-grid .btn { margin-bottom: 16px; } }
+    select.input { appearance: none; -webkit-appearance: none; }
+
+    .view { animation: v .6s var(--ease) both; }
+    @keyframes v { from { opacity: 0; transform: translateY(14px); } }
+  </style>
+</head>
+<body class="has-tabbar">
+  <div class="ambient"></div>
+  <header class="appbar">
+    <a href="index.html" class="brand"><span class="brand-logo">K</span><span class="brand-name">Krunch <small>Owner</small></span></a>
+    <span class="demo-flag">Demo data</span>
+  </header>
+
+  <main>
+    <nav class="tabs" id="tabs"></nav>
+    <div id="view"></div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/store.js"></script>
+  <script src="assets/ui.js"></script>
+  <script>
+    const { $, $$, esc, rupees, ago, dateShort, memberWa, toast, countUp, icon } = UI;
+    const S = () => Store.get();
+
+    const ico = {
+      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>',
+      renew: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8"/><path d="M21 4v5h-5M3 20v-5h5"/></svg>',
+      lead: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>',
+      chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></svg>',
+      users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M1 21a8 8 0 0 1 16 0M17 4a4 4 0 0 1 0 8M23 21a8 8 0 0 0-5-7.4"/></svg>',
+      search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
+    };
+
+    // ---------- Derived state ----------
+    function statusOf(m) {
+      const left = Store.daysUntil(m.end), idle = Store.daysSince(m.lastVisit);
+      if (left <= 0 && left > -45) return { key: "lapsed", left, idle };
+      if (left > 0 && left <= 7) return { key: "due", left, idle };
+      if (left > 7 && idle >= 10) return { key: "inactive", left, idle };
+      if (left <= -45) return { key: "gone", left, idle };
+      return { key: "active", left, idle };
+    }
+    const byStatus = (k) => S().members.map((m) => ({ m, s: statusOf(m) })).filter((x) => x.s.key === k);
+    const counts = () => ({
+      due: byStatus("due").length, lapsed: byStatus("lapsed").length, inactive: byStatus("inactive").length,
+      leads: S().leads.filter((l) => l.status === "new").length,
+      issues: S().feedback.filter((f) => !f.resolved && (f.kind === "issue" || (f.rating && f.rating <= 3))).length
+    });
+    const atRisk = () => [...byStatus("due"), ...byStatus("lapsed")].reduce((a, x) => a + x.m.fee, 0);
+
+    const hue = (s) => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+    const avatar = (name) => `<span class="av" style="background:linear-gradient(135deg,hsl(${hue(name)} 60% 42%),hsl(${(hue(name) + 40) % 360} 60% 28%))">${esc(name.split(" ").map((w) => w[0]).join("").slice(0, 2))}</span>`;
+    const first = (n) => n.split(" ")[0];
+    const stars = (r) => `<span class="mini-stars">${"★".repeat(r)}<span class="off">${"★".repeat(5 - r)}</span></span>`;
+
+    // WhatsApp templates the owner sends with one tap
+    const msgs = {
+      due: (m) => `Hi ${first(m.name)}, this is ${GYM.fullName}. Your ${Store.planById(m.plan).name} plan ends on ${dateShort(m.end)}. Renew before then to keep your streak going 💪 Reply here or pay at the desk.`,
+      lapsed: (m) => `Hi ${first(m.name)}, we miss you at Krunch! Your plan ended on ${dateShort(m.end)}. Come back this week and get a free body composition check with your renewal.`,
+      inactive: (m, s) => `Hi ${first(m.name)}, haven't seen you at Krunch for ${s.idle} days. Everything okay? Your plan is active till ${dateShort(m.end)}. ${m.trainer ? "Coach " + m.trainer : "The team"} is keeping your spot. See you this week?`
+    };
+
+    // ---------- Tabs ----------
+    const TABS = [
+      { id: "today", label: "Today", icon: ico.home },
+      { id: "renewals", label: "Renewals", icon: ico.renew, badge: () => counts().due + counts().lapsed + counts().inactive },
+      { id: "leads", label: "Leads", icon: ico.lead, badge: () => counts().leads },
+      { id: "feedback", label: "Feedback", icon: ico.chat, badge: () => counts().issues },
+      { id: "members", label: "Members", icon: ico.users }
+    ];
+    let tab = (location.hash || "#today").slice(1);
+    if (!TABS.find((t) => t.id === tab)) tab = "today";
+
+    function renderTabs() {
+      $("#tabs").innerHTML = TABS.map((t) => {
+        const b = t.badge ? t.badge() : 0;
+        return `<button class="tab ${t.id === tab ? "on" : ""}" data-tab="${t.id}">${t.icon}<span>${t.label}</span>${b ? `<span class="badge">${b}</span>` : ""}</button>`;
+      }).join("");
+    }
+    $("#tabs").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-tab]"); if (!b) return;
+      go(b.dataset.tab);
+    });
+    function go(id) {
+      tab = id; history.replaceState(null, "", "#" + id);
+      render(); scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function render() {
+      renderTabs();
+      const v = $("#view");
+      v.className = "view"; void v.offsetWidth; v.className = "view";
+      v.innerHTML = VIEWS[tab]();
+      AFTER[tab] && AFTER[tab]();
+    }
+
+    // ---------- Row builders ----------
+    function memberRow(m, s) {
+      const plan = Store.planById(m.plan);
+      let tag = "";
+      if (s.key === "due") tag = `<span class="tag tag-amber">Ends in ${s.left} day${s.left === 1 ? "" : "s"}</span>`;
+      if (s.key === "lapsed") tag = `<span class="tag tag-red">${s.left === 0 ? "Ended today" : `Ended ${-s.left} day${s.left === -1 ? "" : "s"} ago`}</span>`;
+      if (s.key === "inactive") tag = `<span class="tag tag-grey">Last visit ${s.idle} days ago</span>`;
+      if (s.key === "active") tag = `<span class="tag tag-green">Active</span>`;
+      if (s.key === "gone") tag = `<span class="tag tag-grey">Left</span>`;
+      const reminded = m.remindedAt && Store.daysSince(m.remindedAt) < 3 ? `<span class="tag tag-grey">✓ Reminded ${ago(m.remindedAt)}</span>` : "";
+      const actions = s.key === "active" || s.key === "gone" ? "" : `
+        <div class="acts">
+          <a class="btn wa" target="_blank" rel="noopener" data-remind="${m.id}" href="${memberWa(m.phone, msgs[s.key](m, s))}">${icon.wa} ${s.key === "inactive" ? "Check in on them" : "Send reminder"}</a>
+          ${s.key !== "inactive" ? `<button class="btn" data-renew="${m.id}">${icon.check} Renewed · ${rupees(plan.price)}</button>` : ""}
+        </div>`;
+      return `<div class="row" data-row="${m.id}">${avatar(m.name)}<div class="who"><b>${esc(m.name)}</b><div class="meta">${esc(plan.name)} · ${rupees(plan.price)} ${tag} ${reminded}</div></div>${actions}</div>`;
+    }
+
+    function leadRow(l) {
+      const src = l.source === "pt" ? `<span class="tag tag-red">PT consult</span>` : `<span class="tag tag-green">Free trial</span>`;
+      const st = { new: `<span class="tag tag-amber">New</span>`, contacted: `<span class="tag tag-grey">Contacted</span>`, joined: `<span class="tag tag-green">Joined</span>` }[l.status];
+      const wa = l.source === "pt"
+        ? `Hi ${first(l.name)}, this is ${l.coach && l.coach !== "Any coach" ? "Coach " + l.coach : "the coaching team"} from Krunch. Thanks for booking a free PT consultation. When suits you this week?`
+        : `Hi ${first(l.name)}, thanks for booking a free trial at ${GYM.fullName}! Does ${l.time ? l.time.toLowerCase() : "tomorrow"} work for you? We'll have a coach ready for your ${l.goal ? l.goal.toLowerCase() : "first"} session.`;
+      return `<div class="row">${avatar(l.name)}<div class="who"><b>${esc(l.name)}</b><div class="meta">${src} ${st} ${esc(l.goal || "")}${l.time ? " · " + esc(l.time) : ""}${l.coach ? " · " + esc(l.coach) : ""} · ${ago(l.createdAt)}</div></div>
+        <div class="acts">
+          <a class="btn" href="tel:+91${l.phone.slice(-10)}">${icon.phone} Call</a>
+          <a class="btn wa" target="_blank" rel="noopener" data-contact="${l.id}" href="${memberWa(l.phone, wa)}">${icon.wa} WhatsApp</a>
+          ${l.status !== "joined" ? `<button class="btn btn-light" data-join="${l.id}">Joined</button>` : ""}
+        </div></div>`;
+    }
+
+    function feedbackRow(f) {
+      const head = f.kind === "issue" ? `<span class="tag tag-red">Issue report</span>` : stars(f.rating);
+      const tags = (f.tags || []).map((t) => `<span class="tag tag-grey">${esc(t)}</span>`).join(" ");
+      const who = f.name || (f.phone ? f.phone : "Anonymous");
+      return `<div class="row" style="${f.resolved ? "opacity:.55" : ""}">
+        <span class="av" style="background:${f.kind === "issue" || (f.rating && f.rating <= 3) ? "var(--accent-soft);color:#ff7385" : "var(--ok-soft);color:var(--ok)"}">${f.kind === "issue" ? "!" : f.rating}</span>
+        <div class="who"><b>${head}</b><div class="meta">${esc(who)} · ${ago(f.createdAt)} ${tags} ${f.resolved ? '<span class="tag tag-green">Fixed</span>' : ""}</div></div>
+        <div class="acts">
+          ${f.phone ? `<a class="btn" href="tel:+91${f.phone.slice(-10)}">${icon.phone} Call back</a>` : ""}
+          ${!f.resolved ? `<button class="btn" data-resolve="${f.id}">${icon.check} Mark fixed</button>` : ""}
+        </div>
+        ${f.message ? `<p class="msg">“${esc(f.message)}”</p>` : ""}
+      </div>`;
+    }
+
+    // ---------- Views ----------
+    const VIEWS = {
+      today() {
+        const c = counts(), r = S().results;
+        const hr = new Date().getHours();
+        const greet = hr < 12 ? "Good morning." : hr < 17 ? "Good afternoon." : "Good evening.";
+        const queue = [...byStatus("due"), ...byStatus("lapsed")].sort((a, b) => a.s.left - b.s.left).slice(0, 4);
+        const newLeads = S().leads.filter((l) => l.status === "new").slice(0, 3);
+        const issues = S().feedback.filter((f) => !f.resolved && (f.kind === "issue" || (f.rating && f.rating <= 3))).slice(0, 2);
+        return `
+          <span class="kicker"><span class="dot"></span> ${new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}</span>
+          <h1>${greet}<br><span class="serif">Here's what needs you.</span></h1>
+
+          <div class="risk" style="margin-top:22px">
+            <span class="small" style="color:#ff9aa7">Membership money at risk</span>
+            <div class="amt" id="risk-amt">${rupees(atRisk())}</div>
+            <p>${c.due} plans end this week and ${c.lapsed} already ended without renewing. A reminder on WhatsApp takes one tap.</p>
+            <button class="btn btn-light" data-go="renewals">Send reminders <span class="arrow">${icon.arrow}</span></button>
+          </div>
+
+          <div class="kpis">
+            <button class="kpi" data-go="renewals"><b>${c.due}</b><span><i style="background:var(--warn)"></i>Due this week</span></button>
+            <button class="kpi" data-go="renewals"><b>${c.lapsed}</b><span><i style="background:var(--accent)"></i>Didn't renew</span></button>
+            <button class="kpi" data-go="renewals"><b>${c.inactive}</b><span><i style="background:var(--muted)"></i>Stopped coming</span></button>
+            <button class="kpi" data-go="leads"><b>${c.leads}</b><span><i style="background:var(--ok)"></i>New leads</span></button>
+            <button class="kpi" data-go="feedback"><b>${c.issues}</b><span><i style="background:#ff7385"></i>Open complaints</span></button>
+          </div>
+
+          <div class="section-head"><h2>This month's <span class="serif">results</span></h2><span class="muted">The numbers you check after 30 days</span></div>
+          <div class="score">
+            <div><b class="ok" data-cu="${r.recovered}" data-rs>${rupees(r.recovered)}</b><span>Recovered from renewals</span></div>
+            <div><b>${r.recoveredCount}</b><span>Members kept</span></div>
+            <div><b>${r.remindersSent}</b><span>Reminders sent</span></div>
+            <div><b>${r.reviewPrompts}</b><span>Google review taps</span></div>
+          </div>
+
+          <div class="section-head"><h2>Do these <span class="serif">first</span></h2><button class="btn btn-sm" data-go="renewals">See all</button></div>
+          <div class="list">${queue.map((x) => memberRow(x.m, x.s)).join("") || '<div class="empty">No renewals pending. Nice.</div>'}</div>
+
+          ${newLeads.length ? `<div class="section-head"><h2>New <span class="serif">leads</span></h2><button class="btn btn-sm" data-go="leads">See all</button></div>
+          <div class="list">${newLeads.map(leadRow).join("")}</div>` : ""}
+
+          ${issues.length ? `<div class="section-head"><h2>Fix before it hits <span class="serif">Google</span></h2><button class="btn btn-sm" data-go="feedback">See all</button></div>
+          <div class="list">${issues.map(feedbackRow).join("")}</div>` : ""}
+        `;
+      },
+
+      renewals() {
+        const due = byStatus("due").sort((a, b) => a.s.left - b.s.left);
+        const lapsed = byStatus("lapsed").sort((a, b) => b.s.left - a.s.left);
+        const inactive = byStatus("inactive").sort((a, b) => b.s.idle - a.s.idle);
+        return `
+          <span class="kicker"><span class="dot"></span> Keep members</span>
+          <h1>Renewals<span class="serif">.</span></h1>
+          <p class="muted" style="margin:0;max-width:520px">Tap <b>Send reminder</b> to open WhatsApp with the message written for you. Tap <b>Renewed</b> when they pay and the money shows up in your results.</p>
+
+          <div class="section-head"><h2>Ending this <span class="serif">week</span></h2><span class="muted">${rupees(due.reduce((a, x) => a + x.m.fee, 0))}</span></div>
+          <div class="list">${due.map((x) => memberRow(x.m, x.s)).join("") || '<div class="empty">Nobody\'s plan ends this week.</div>'}</div>
+
+          <div class="section-head"><h2>Already <span class="serif">ended</span></h2><span class="muted">${rupees(lapsed.reduce((a, x) => a + x.m.fee, 0))}</span></div>
+          <div class="list">${lapsed.map((x) => memberRow(x.m, x.s)).join("") || '<div class="empty">Everyone renewed.</div>'}</div>
+
+          <div class="section-head"><h2>Stopped <span class="serif">coming</span></h2><span class="muted">Active plan, no visit in 10+ days</span></div>
+          <div class="list">${inactive.map((x) => memberRow(x.m, x.s)).join("") || '<div class="empty">Everyone\'s showing up.</div>'}</div>
+        `;
+      },
+
+      leads() {
+        const L = S().leads;
+        return `
+          <span class="kicker"><span class="dot"></span> From the website and member app</span>
+          <h1>Leads<span class="serif">.</span></h1>
+          <p class="muted" style="margin:0;max-width:520px">Free trial bookings from the website and PT consultations from the member app land here. Call them within the hour.</p>
+          <div class="section-head"><h2>${L.filter((l) => l.status === "new").length} <span class="serif">waiting</span></h2><span class="muted">${L.filter((l) => l.status === "joined").length} joined</span></div>
+          <div class="list">${L.map(leadRow).join("") || '<div class="empty">No leads yet. Try the free-trial form on the website.</div>'}</div>
+        `;
+      },
+
+      feedback() {
+        const F = S().feedback;
+        const rated = F.filter((f) => f.rating);
+        const avg = rated.length ? (rated.reduce((a, f) => a + f.rating, 0) / rated.length).toFixed(1) : "–";
+        const open = F.filter((f) => !f.resolved).sort((a, b) => (a.kind === "issue" ? -1 : 0) - (b.kind === "issue" ? -1 : 0));
+        const done = F.filter((f) => f.resolved);
+        const base = location.href.replace(/admin\.html.*$/, "").replace(/#.*$/, "");
+        const local = /localhost|127\.0\.0\.1/.test(location.hostname);
+        return `
+          <span class="kicker"><span class="dot"></span> Private to you</span>
+          <h1>Feedback<span class="serif">.</span></h1>
+          <p class="muted" style="margin:0;max-width:540px">Members rate their workout by scanning the desk QR code. You see every note first and fix it, so problems get solved before they turn into Google reviews.</p>
+
+          <div class="score" style="margin-top:22px">
+            <div><b>${avg}</b><span>Average rating</span></div>
+            <div><b>${rated.length}</b><span>Ratings this month</span></div>
+            <div><b>${F.filter((f) => !f.resolved).length}</b><span>Waiting on you</span></div>
+            <div><b>${S().results.reviewPrompts}</b><span>Google review taps</span></div>
+          </div>
+
+          <div class="section-head"><h2>Needs <span class="serif">attention</span></h2></div>
+          <div class="list">${open.map(feedbackRow).join("") || '<div class="empty">All clear.</div>'}</div>
+
+          ${done.length ? `<div class="section-head"><h2>Fixed</h2></div><div class="list">${done.map(feedbackRow).join("")}</div>` : ""}
+
+          <div class="section-head"><h2>Desk <span class="serif">QR codes</span></h2><span class="muted">Print and stick at the front desk</span></div>
+          <div class="qr-grid">
+            <div class="card qr"><div class="code" id="qr-fb"></div><div><b>Rate your workout</b><p class="small muted" style="margin:4px 0 10px">Opens the 10-second feedback page.</p><a class="btn btn-sm" href="feedback.html" target="_blank">Preview</a></div></div>
+            <div class="card qr"><div class="code" id="qr-ci"></div><div><b>Member check-in</b><p class="small muted" style="margin:4px 0 10px">Tracks visits so you know who stopped coming.</p><a class="btn btn-sm" href="member.html" target="_blank">Preview</a></div></div>
+          </div>
+          ${local ? `<p class="tiny faint" style="margin-top:10px">These codes point to localhost, so phones can't open them. Open the dashboard from your Mac's network address to get scannable codes.</p>` : ""}
+          <span class="hidden" id="qr-base" data-base="${esc(base)}"></span>
+        `;
+      },
+
+      members() {
+        return `
+          <span class="kicker"><span class="dot"></span> ${S().members.length} on the books</span>
+          <h1>Members<span class="serif">.</span></h1>
+          <details class="add card" style="margin-top:18px">
+            <summary class="btn btn-light btn-sm">+ Add member</summary>
+            <form id="add-form" class="add-grid" novalidate>
+              <div class="field"><label for="a-name">Name</label><input class="input" id="a-name"></div>
+              <div class="field"><label for="a-phone">Mobile</label><input class="input" id="a-phone" inputmode="tel"></div>
+              <div class="field"><label for="a-plan">Plan</label><select class="input" id="a-plan">${GYM.plans.map((p) => `<option value="${p.id}">${esc(p.name)} · ${rupees(p.price)}</option>`).join("")}</select></div>
+              <button class="btn btn-light" type="submit">Add</button>
+            </form>
+          </details>
+          <div class="search" style="margin:14px 0 10px">${ico.search}<input class="input" id="q" placeholder="Search name or number"></div>
+          <div class="list" id="m-list"></div>
+          <div style="margin-top:40px;text-align:center"><button class="btn btn-sm" id="reset">Reset demo data</button></div>
+        `;
+      }
+    };
+
+    const AFTER = {
+      today() {
+        const el = $("#risk-amt");
+        countUp(el, atRisk(), { prefix: "₹", duration: 1400 });
+      },
+      feedback() {
+        if (!window.QRCode) return;
+        const base = $("#qr-base").dataset.base;
+        new QRCode($("#qr-fb"), { text: base + "feedback.html", width: 224, height: 224, correctLevel: QRCode.CorrectLevel.M });
+        new QRCode($("#qr-ci"), { text: base + "member.html#checkin", width: 224, height: 224, correctLevel: QRCode.CorrectLevel.M });
+      },
+      members() {
+        const draw = () => {
+          const q = ($("#q").value || "").toLowerCase().replace(/\s/g, "");
+          const rows = S().members
+            .filter((m) => !q || m.name.toLowerCase().replace(/\s/g, "").includes(q) || m.phone.includes(q))
+            .map((m) => memberRow(m, statusOf(m)));
+          $("#m-list").innerHTML = rows.join("") || '<div class="empty">No match.</div>';
+        };
+        $("#q").addEventListener("input", draw);
+        draw();
+        $("#add-form").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = $("#a-name").value.trim(), phone = $("#a-phone").value.replace(/\D/g, "");
+          if (!name || phone.length < 10) { toast("Add a name and 10-digit number"); return; }
+          Store.addMember({ name, phone, plan: $("#a-plan").value });
+          toast(`${first(name)} added`);
+          render();
+        });
+        $("#reset").addEventListener("click", () => { Store.reset(); toast("Demo data reset"); go("today"); });
+      }
+    };
+
+    // ---------- Actions (delegated) ----------
+    document.addEventListener("click", (e) => {
+      const g = e.target.closest("[data-go]");
+      if (g) { go(g.dataset.go); return; }
+
+      const r = e.target.closest("[data-remind]");
+      if (r) {
+        const m = S().members.find((x) => x.id === r.dataset.remind);
+        if (m) { Store.markReminded(m); setTimeout(render, 400); }
+        return; // link still opens WhatsApp
+      }
+
+      const rn = e.target.closest("[data-renew]");
+      if (rn) {
+        const m = S().members.find((x) => x.id === rn.dataset.renew);
+        if (!m) return;
+        const row = rn.closest(".row");
+        Store.renew(m);
+        toast(`${rupees(Store.planById(m.plan).price)} recovered · ${first(m.name)} renewed`);
+        row.classList.add("out");
+        setTimeout(render, 450);
+        return;
+      }
+
+      const c = e.target.closest("[data-contact]");
+      if (c) { const l = S().leads.find((x) => x.id === c.dataset.contact); if (l && l.status === "new") { Store.setLeadStatus(l.id, "contacted"); setTimeout(render, 400); } return; }
+
+      const j = e.target.closest("[data-join]");
+      if (j) {
+        const l = S().leads.find((x) => x.id === j.dataset.join);
+        if (!l) return;
+        Store.setLeadStatus(l.id, "joined");
+        if (!Store.findMemberByPhone(l.phone)) Store.addMember({ name: l.name, phone: l.phone, plan: "monthly" });
+        toast(`${first(l.name)} joined 🎉 added to members`);
+        render();
+        return;
+      }
+
+      const rs = e.target.closest("[data-resolve]");
+      if (rs) { Store.resolveFeedback(rs.dataset.resolve); toast("Marked fixed"); render(); }
+    });
+
+    // Refresh when another tab (website / member app) adds data
+    addEventListener("storage", () => location.reload());
+    addEventListener("focus", () => { try { Object.assign(S(), JSON.parse(localStorage.getItem("krunch-demo-v1"))); render(); } catch (e) {} });
+
+    render();
+  </script>
+</body>
+</html>
